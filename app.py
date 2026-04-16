@@ -5,6 +5,7 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
  
 import cv2
+import matplotlib.pyplot as plt
 import streamlit as st
 from streamlit.components.v1 import html
 from ultralytics import YOLO
@@ -35,11 +36,23 @@ def load_model(path: Path):
 # ─── GLOBAL CSS ────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
+<<<<<<< Updated upstream
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
+=======
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap');
+
+/* ── Force Dark Mode Variables ── */
+:root {
+    --primary-color: #0f9d58;
+    --background-color: #060c18;
+    --secondary-background-color: #0b1727;
+    --text-color: #e2eaf4;
+}
+>>>>>>> Stashed changes
 
 /* ── Reset & base ── */
 html, body, [class*="css"] {
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
     background-color: #060c18 !important;
     color: #e2eaf4 !important;
 }
@@ -64,7 +77,7 @@ html, body, [class*="css"] {
 .stTabs [data-baseweb="tab"] {
     border-radius: 9px;
     padding: 8px 24px;
-    font-family: 'Outfit', sans-serif;
+    font-family: 'Josefin Sans', sans-serif;
     font-weight: 600;
     font-size: 13px;
     letter-spacing: 0.5px;
@@ -110,7 +123,7 @@ html, body, [class*="css"] {
 .stButton > button {
     background: linear-gradient(135deg, #0f9d58, #22c55e) !important;
     color: #fff !important;
-    font-family: 'Outfit', sans-serif !important;
+    font-family: 'Josefin Sans', sans-serif !important;
     font-weight: 700 !important;
     font-size: 13px !important;
     letter-spacing: 0.5px;
@@ -189,7 +202,7 @@ h3 {
 
 /* ── Detection log text ── */
 .stMarkdown code, pre {
-    font-family: 'DM Mono', monospace !important;
+    font-family: 'Josefin Sans', sans-serif !important;
     background: rgba(255,255,255,0.04) !important;
     border: 1px solid rgba(255,255,255,0.07) !important;
     border-radius: 8px;
@@ -242,7 +255,7 @@ html(
     f"""
     <html>
     <head>
-        <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;800&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;600;700&display=swap" rel="stylesheet">
         <style>
             * {{ margin: 0; padding: 0; box-sizing: border-box; }}
             body {{ background: transparent; }}
@@ -275,9 +288,9 @@ html(
                 box-shadow: 0 0 16px rgba(15,157,88,0.3);
             }}
             .logo-wrap img {{ width: 100%; height: 100%; object-fit: contain; }}
-            .logo-wrap span {{ color: #22c55e; font-size: 22px; font-weight: 800; font-family: Outfit, sans-serif; }}
+            .logo-wrap span {{ color: #22c55e; font-size: 22px; font-weight: 800; font-family: 'Josefin Sans', sans-serif; }}
             .brand {{
-                font-family: Outfit, sans-serif;
+                font-family: 'Josefin Sans', sans-serif;
                 font-size: 26px;
                 font-weight: 800;
                 letter-spacing: 4px;
@@ -297,7 +310,7 @@ html(
                 border: 1px solid rgba(15,157,88,0.25);
                 border-radius: 6px;
                 padding: 3px 9px;
-                font-family: Outfit, sans-serif;
+                font-family: 'Josefin Sans', sans-serif;
                 font-size: 10px;
                 font-weight: 700;
                 letter-spacing: 1.5px;
@@ -315,7 +328,7 @@ html(
                 gap: 2px;
             }}
             .datetime-label {{
-                font-family: Outfit, sans-serif;
+                font-family: 'Josefin Sans', sans-serif;
                 font-size: 10px;
                 font-weight: 600;
                 letter-spacing: 1px;
@@ -323,7 +336,7 @@ html(
                 text-transform: uppercase;
             }}
             #ph-time {{
-                font-family: Outfit, sans-serif;
+                font-family: 'Josefin Sans', sans-serif;
                 font-size: 13px;
                 font-weight: 500;
                 color: #7a9ab0;
@@ -336,7 +349,7 @@ html(
                 border-radius: 8px;
                 padding: 6px 14px;
                 display: flex; align-items: center; gap: 8px;
-                font-family: Outfit, sans-serif;
+                font-family: 'Josefin Sans', sans-serif;
             }}
             .tip-dot {{
                 width: 8px; height: 8px;
@@ -439,7 +452,7 @@ with tabs[0]:
         # Show in a styled mono block
         entries = st.session_state.detection_history[:8]
         lines_html = "".join(
-            f"<div style='padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-family:DM Mono,monospace;font-size:13px;color:#8ef56d'>"
+            f"<div style='padding:5px 0;border-bottom:1px solid rgba(255,255,255,0.05);font-family:Josefin Sans,sans-serif;font-size:13px;color:#8ef56d'>"
             f"<span style='color:#3a6a4a;margin-right:10px'>›</span>{e}</div>"
             for e in entries
         )
@@ -583,7 +596,16 @@ with tabs[1]:
                 inference_ms = int((time.time() - start) * 1000)
                 st.session_state.inference_times = [inference_ms] + st.session_state.inference_times[:99]
 
+<<<<<<< Updated upstream
                 annotated = results[0].plot()
+=======
+                # Check if the user wants boxes
+                if st.session_state.get("show_boxes", True):
+                    annotated = results[0].plot()
+                else:
+                    annotated = frame.copy() # Just the clean camera image
+
+>>>>>>> Stashed changes
                 frame_rgb = cv2.cvtColor(annotated, cv2.COLOR_BGR2RGB)
                 frame_placeholder.image(frame_rgb, channels="RGB", use_container_width=True)
 
@@ -611,10 +633,33 @@ with tabs[1]:
                             current.append(violation_msg)
                             st.session_state.frames_with_violations += 1
                             
+<<<<<<< Updated upstream
                             # Audio Alert (Click the page once after starting to enable browser audio)
                             html("""<audio autoplay><source src="https://cdn.pixabay.com/audio/2021/08/04/audio_0625c1539c.mp3" type="audio/mpeg"></audio>""", height=0)
                             
                             st.session_state.v_counter = 0 # Reset so it doesn't log every single frame
+=======
+                            # 1. Audio Alert
+                            if st.session_state.get("enable_audio", True):
+                                html("""<audio autoplay><source src="https://cdn.pixabay.com/audio/2021/08/04/audio_0625c1539c.mp3" type="audio/mpeg"></audio>""", height=0)
+
+                            # 2. Record to Text File (Force Write)
+                            if st.session_state.get("record_file", False):
+                                try:
+                                    with open("violation_history.txt", "a", encoding="utf-8") as f:
+                                        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+                                        f.write(f"{timestamp}: {violation_msg}\n")
+                                        f.flush() # <--- This forces the computer to save the line NOW
+                                except Exception as e:
+                                    print(f"File Error: {e}")
+
+                            # 3. Save Screenshot
+                            if st.session_state.get("save_frames", False):
+                                img_name = f"violation_{int(time.time())}.jpg"
+                                cv2.imwrite(img_name, annotated)
+                            
+                            st.session_state.v_counter = 0
+>>>>>>> Stashed changes
                     else:
                         st.session_state.v_counter = 0
                         current.append("✅ Compliance Verified")
@@ -629,7 +674,7 @@ with tabs[1]:
                 log_placeholder.markdown(
                     "<div style='background:#0b1727;border:1px solid rgba(15,157,88,0.12);border-radius:10px;padding:10px 14px;margin-top:8px'>"
                     + "".join(
-                        f"<div style='font-family:DM Mono,monospace;font-size:12px;color:#8ef56d;padding:2px 0'>"
+                        f"<div style='font-family:Josefin Sans,sans-serif;font-size:12px;color:#8ef56d;padding:2px 0'>"
                         f"<span style='color:#3a6a4a'>›</span> {d}</div>"
                         for d in st.session_state.detection_history[:6]
                     )
@@ -662,8 +707,8 @@ with tabs[2]:
                 f"<div style='display:flex;align-items:center;gap:12px;padding:8px 14px;"
                 f"background:#0b1727;border-radius:8px;margin-bottom:4px;"
                 f"border-left:3px solid {color}'>"
-                f"<span style='color:#3a5a6a;font-size:11px;font-weight:600;font-family:DM Mono,monospace'>#{i:02d}</span>"
-                f"<span style='color:#c0d8e8;font-size:13px;font-family:DM Mono,monospace'>{entry}</span>"
+                f"<span style='color:#3a5a6a;font-size:11px;font-weight:600;font-family:Josefin Sans,sans-serif'>#{i:02d}</span>"
+                f"<span style='color:#c0d8e8;font-size:13px;font-family:Josefin Sans,sans-serif'>{entry}</span>"
                 f"</div>",
                 unsafe_allow_html=True
             )
@@ -683,6 +728,7 @@ with tabs[3]:
         if st.session_state.inference_times else 0
     )
 
+<<<<<<< Updated upstream
     r1, r2 = st.columns(2)
     with r1:
         st.metric("Frames Scanned", scans)
@@ -690,6 +736,75 @@ with tabs[3]:
     with r2:
         st.metric("Compliance Rate", f"{compliance}%")
         st.metric("Avg Inference Time", f"{avg_inf} ms")
+=======
+    st.markdown(f"""
+        <div style='background: linear-gradient(145deg, #0b1727, #0d1f35); border: 1px solid rgba(15, 157, 88, 0.3); border-radius: 16px; padding: 24px; margin-bottom: 24px; box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);'>
+            <div style='display: grid; grid-template-columns: repeat(2, 1fr); gap: 32px;'>
+                <div style='font-family: "Josefin Sans", sans-serif;'>
+                    <div style='font-size: 11px; color: #6b84a0; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px;'>Frames Scanned</div>
+                    <div style='font-size: 36px; color: #ffffff; font-weight: 700;'>{scans}</div>
+                </div>
+                <div style='font-family: "Josefin Sans", sans-serif;'>
+                    <div style='font-size: 11px; color: #6b84a0; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px;'>Compliance Rate</div>
+                    <div style='font-size: 36px; color: #22c55e; font-weight: 700;'>{compliance}%</div>
+                </div>
+                <div style='font-family: "Josefin Sans", sans-serif;'>
+                    <div style='font-size: 11px; color: #6b84a0; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px;'>Violation Frames</div>
+                    <div style='font-size: 36px; color: #ef4444; font-weight: 700;'>{vframes}</div>
+                </div>
+                <div style='font-family: "Josefin Sans", sans-serif;'>
+                    <div style='font-size: 11px; color: #6b84a0; font-weight: 600; text-transform: uppercase; letter-spacing: 1.2px; margin-bottom: 4px;'>Avg Inference Time</div>
+                    <div style='font-size: 36px; color: #8ef56d; font-weight: 700;'>{avg_inf} ms</div>
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
+
+    # Weekly Trends Chart
+    st.markdown("<div style='height:1.5rem'></div>", unsafe_allow_html=True)
+    st.markdown("### Daily Violations This Week")
+
+    # Get current day index (0=Monday, 6=Sunday)
+    current_day_idx = datetime.datetime.now(ZoneInfo("Asia/Manila")).weekday()
+    days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+    
+    # Initialize values with 0 and inject real-time session data into the current day
+    values = [0] * 7
+    values[current_day_idx] = st.session_state.frames_with_violations
+    
+    # Highlight today in red, others in blue
+    colors = ['#ef4444' if i == current_day_idx else '#3b82f6' for i in range(7)]
+
+    fig, ax = plt.subplots(figsize=(5, 2.5))
+    
+    # Background styling to match dashboard
+    fig.patch.set_facecolor('#0b1727')
+    ax.set_facecolor('#0b1727')
+
+    bars = ax.bar(days, values, color=colors, width=0.65, zorder=3, edgecolor='#0b1727', linewidth=1)
+
+    # Clean UI: Remove top and right spines
+    ax.spines['top'].set_visible(False)
+    ax.spines['right'].set_visible(False)
+    ax.spines['left'].set_color('#3a5a6a')
+    ax.spines['bottom'].set_color('#3a5a6a')
+    
+    # Style ticks and labels
+    ax.tick_params(axis='x', colors='#6b84a0', labelsize=8)
+    ax.tick_params(axis='y', colors='#6b84a0', labelsize=8)
+    
+    # Subtle gridlines
+    ax.yaxis.grid(True, linestyle='--', alpha=0.1, color='#e2eaf4', zorder=0)
+    
+    # Value labels above bars
+    for bar in bars:
+        yval = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2, yval + 0.5, yval, 
+                ha='center', va='bottom', color='#e2eaf4', fontsize=8, fontweight='bold')
+
+    plt.tight_layout()  # helps compress spacing
+    st.pyplot(fig)
+>>>>>>> Stashed changes
 
     if scans > 0:
         st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
@@ -722,13 +837,17 @@ with tabs[4]:
     )
     st.markdown("**Detection**")
     st.checkbox("Enable audio alerts on violation", value=True)
-    st.checkbox("Show bounding boxes on feed", value=True)
+    st.checkbox("Show bounding boxes on feed", value=True, key="show_boxes")
     st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
     st.markdown("**Data**")
-    st.checkbox("Record detection history to file", value=False)
-    st.checkbox("Save annotated frames", value=False)
+    st.checkbox("Record detection history to file", value=False, key="record_file")
+    st.checkbox("Save annotated frames", value=False, key="save_frames")
     st.markdown("</div>", unsafe_allow_html=True)
 
     st.markdown("<div style='height:1rem'></div>", unsafe_allow_html=True)
     if st.button("💾  Save Settings"):
+<<<<<<< Updated upstream
         st.success("Settings saved successfully.")
+=======
+        st.success("Settings saved successfully.")
+>>>>>>> Stashed changes
